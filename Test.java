@@ -1,5 +1,7 @@
+
 public class Test {
     public static void main(String[] args) {
-        new Deck();
+        Deck run = new Deck();
+        run.Cut();
     }
 }
