@@ -5,13 +5,33 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class Deck {
-	  private ArrayList<Card> deck;
-	  private ArrayList<Card> PlayerHand;
-	  private ArrayList<Card> P2Hand;
-	  private ArrayList<Card> P3Hand;
-	  private ArrayList<Card> P4Hand;
-	  private ArrayList<Card> TableCards;
-
+	  
+	  static private ArrayList<Card> deck= new ArrayList<Card>();
+	  static private ArrayList<Card> PlayerHand= new ArrayList<Card>();;
+	  static private ArrayList<Card> NoviceHand= new ArrayList<Card>();;
+	  static private ArrayList<Card> RegularHand= new ArrayList<Card>();;
+	  static private ArrayList<Card> ExpertHand= new ArrayList<Card>();;
+	  static private ArrayList<Card> TableCards= new ArrayList<Card>();;
+	  Scanner sc= new Scanner(System.in);
+	  
+	  //--------------------------------------------SETTERS----------------------------------------
+	  public void setDeck(ArrayList<Card> deck) {this.deck=deck;}
+	  public void setPlayerHand(ArrayList<Card> PlayerHand) {this.PlayerHand=PlayerHand;}
+	  public void setP2Hand(ArrayList<Card> NoviceHand) {this.NoviceHand=NoviceHand;}
+	  public void setP3Hand(ArrayList<Card> RegularHand) {this.RegularHand=RegularHand;}
+	  public void setP4Hand(ArrayList<Card> expertHand) {this.ExpertHand=expertHand;}
+	  public void setTableCard(ArrayList<Card> TableCards) {this.TableCards=TableCards;}
+	  
+	  //--------------------------------------------GETTERS----------------------------------------
+	  
+	  public ArrayList<Card> getDeck() {return deck;}
+	  public ArrayList<Card> getPlayerHand() {return PlayerHand;}
+	  public ArrayList<Card> getNoviceHand() {return NoviceHand;}
+	  public ArrayList<Card> getRegularHand() {return RegularHand;}
+	  public ArrayList<Card> getExpertHand() {return ExpertHand;}
+	  public ArrayList<Card> getTableCards() {return TableCards;}
+	  
+	  //-----------------------------------------CREATING A DECK------------------------------------
 	    public Deck() {
 	        // how to create a deck using an arraylist
 	        String[] values = {"2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"};
@@ -26,13 +46,13 @@ public class Deck {
 	        
 	     // Shuffling the deck with the Java Collection shuffle method
 	        Collections.shuffle(deck);
-	       
+	        
 	    }
 	    
-	    // cut method
+	   
+	    //---------------------------------------------CUT-----------------------------------------
 
 	       public void Cut() {
-	        	System.out.println("------------------------");
 
 	        	Random p=new Random();
 	        	int cut=p.nextInt(deck.size());
@@ -53,57 +73,46 @@ public class Deck {
 	    		deck.addAll(bottom);
 	    	    deck.addAll(top);
 	    	    
-	    	    
-	    		
-	    	
-	        // a loop to test the code
-	    	    /*for (int i = 0; i < deck.size(); i++) 
-	                System.out.println(deck.get(i));*/
 	    }
 	       
-	       
-	       
-  //Deal method
-   public void Deal() {
-	  PlayerHand= new ArrayList<Card>();
-	  P2Hand= new ArrayList<Card>();
-	  P3Hand= new ArrayList<Card>();
-	  P4Hand= new ArrayList<Card>();
-	  TableCards= new ArrayList<Card>();
+	     //Deal method
+	       public void Deal() {
+	    	  System.out.print("Number of players: ");
+	    	  int players = sc.nextInt();
+	    	
+	    	  while (players<2 || players>4) { System.out.print("Enter again: ");players = sc.nextInt(); }
+	    	  if (players==2) {
+	    		  for(int i=0;i<4;i++) {
+	    			  getPlayerHand().add(deck.get(i));  deck.remove(i); 
+	    			  NoviceHand.add(deck.get(i));  deck.remove(i);
+	    		  }
+	     	  }
+	    	  if (players==3) {
+	    		  for(int i=0;i<4;i++) {
+	    			  PlayerHand.add(deck.get(i));  deck.remove(i);
+	    			  NoviceHand.add(deck.get(i));  deck.remove(i);
+	    			  RegularHand.add(deck.get(i));  deck.remove(i);
+	    			  ExpertHand.add(deck.get(i));  deck.remove(i);
 
-	  Scanner sc= new Scanner(System.in);
-	  System.out.print("Number of players: ");
-	  int players = sc.nextInt();
+	    		  }
+	    	  }
+	    	  if (players==4) {
+	    		  for(int i=0;i<4;i++) {
+	    			  getPlayerHand().add(deck.get(i));  deck.remove(i);
+	    			  getNoviceHand().add(deck.get(i));  deck.remove(i);
+	    			  RegularHand.add(deck.get(i));  deck.remove(i);
+	    			  ExpertHand.add(deck.get(i));  deck.remove(i);
+	    		  }
+	    	  }
+	       }
+       public void Display() {
+    	   //Table Cards
+	    	  for(int i=0;i<4;i++) { TableCards.add(deck.get(i)); deck.remove(i); }
+	    	  System.out.println("Top Card: " + TableCards.get(3));
+	    	
+	    	  //Player Cards
+	    	  System.out.println("Your Cards: " + PlayerHand);
+
+       }
 	
-	  while (players<2 || players>4) { System.out.print("Enter again: ");players = sc.nextInt(); }
-	  
-	  if (players==2) {
-		  for(int i=0;i<4;i++) {
-			  PlayerHand.add(deck.get(i));  deck.remove(i); 
-			  P2Hand.add(deck.get(i));  deck.remove(i);
-		  }
- 	  }
-	  if (players==3) {
-		  for(int i=0;i<4;i++) {
-			  PlayerHand.add(deck.get(i));  deck.remove(i);
-			  P2Hand.add(deck.get(i));  deck.remove(i);
-			  P3Hand.add(deck.get(i));  deck.remove(i);
-		  }
-	  }
-	  if (players==4) {
-		  for(int i=0;i<4;i++) {
-			  PlayerHand.add(deck.get(i));  deck.remove(i);
-			  P2Hand.add(deck.get(i));  deck.remove(i);
-			  P3Hand.add(deck.get(i));  deck.remove(i);
-			  P4Hand.add(deck.get(i));  deck.remove(i);
-		  }
-	  }
-	  
-	  //Table Cards
-	  for(int i=0;i<4;i++) { TableCards.add(deck.get(i)); deck.remove(i); }
-	  System.out.println("Top Card: " + PlayerHand.get(3));
-	
-	  //Player Cards
-	  System.out.println("Your Cards: " + PlayerHand);
-   }
 }
