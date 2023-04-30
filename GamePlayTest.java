@@ -1,15 +1,13 @@
 import java.util.Scanner;
 import java.util.ArrayList;
 
-public class GamePlay3 {
-	Scanner sc = new Scanner(System.in);		
+public class GamePlayTest {
+	Scanner sc = new Scanner(System.in);
 	Deck deck =new Deck();
-	Bots bot1 = new Bots();
-	Bots bot2 = new Bots();
+	Player bot1 = new Player();
+	Player bot2 = new Player();
 	Player player = new Player();
-	
-	protected ArrayList<Card> PlayerTakenCards;
-	
+
 	private int Bot1Level;
 	private int Bot2Level;
 
@@ -25,16 +23,15 @@ public class GamePlay3 {
 	public void setBot2Level(int bot2Level) {
 		Bot2Level = bot2Level;
 	}
-	
+
 	Deck Play3 = new Deck();
-	
-	
+
+
 	public void GameStart() {
 		for(int i=0;i<4;i++) {
-			player.PlayersTurn();
+			player.player();
 			bot1.RegularBot();
 			bot2.RegularBot();
 		}
-		
 	}
 }
