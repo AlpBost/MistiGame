@@ -4,8 +4,8 @@ import java.util.Scanner;
 
 public class Player {
 	Deck deck = new Deck();
-	Random random = new Random();
-	Scanner sacnner = new Scanner(System.in);
+	Random random =new Random();
+	Scanner scanner = new Scanner(System.in);
 	protected ArrayList<Card> BotTakenCards = new ArrayList<Card>();
 	protected ArrayList<Card> PlayerTakenCards= new ArrayList<Card>();
 
@@ -81,7 +81,6 @@ public class Player {
 
 
 	public void NoviceBot() {
-
 		//System.out.println("Enter the name of the bot: ");
 		//String botName = scanner.nextLine();
 
@@ -139,31 +138,66 @@ public class Player {
 		}
 	}
 
-	
 	public void RegularBot() {
-		for (int i=0;i<deck.getRegularHand().size();i++) {
-			if (h == 0) {
-				if(deck.getTableCards().get(deck.getTableCards().size()-1).getValue().equals(deck.getRegularHand().get(i).getValue())) {
-					System.out.println("Bot 1 took all cards");
-					Bot1TakenCards.addAll(deck.getTableCards());
-					deck.getTableCards().clear();
-					deck.getRegularHand().remove(i);
-					h++;
+		//System.out.println("Enter the name of the bot: ");
+		//String botName = scanner.nextLine();
+
+		switch(deck.getTableCards().size()){
+			case 0:
+				int randomIndex = random.nextInt(deck.getRegularHand().size());
+				Card botCard = deck.getRegularHand().get(randomIndex);
+				System.out.println("Bot played: " + botCard);
+				deck.getTableCards().add(botCard);
+				deck.getRegularHand().remove(botCard);
+				System.out.println("Cards that are on the table are: ");
+				System.out.println(String.valueOf(deck.getTableCards()));
+				break;
+
+			case 1:
+				for (int i = 0 ; i < deck.getRegularHand().size() ; i++) {
+					if (deck.getRegularHand().get(i).getValue() == deck.getTableCards().get(deck.getTableCards().size() - 1).getValue()) {
+						deck.getTableCards().add(deck.getRegularHand().get(i));
+						deck.getRegularHand().remove(deck.getRegularHand().get(i));
+						System.out.println("Mişti!");
+						deck.getTableCards().clear();
+						break;
+
+					} else if (deck.getRegularHand().get(i).getValue() == "J") {
+						deck.getTableCards().add(deck.getRegularHand().get(i));
+						deck.getRegularHand().remove(deck.getRegularHand().get(i));
+						System.out.println("Bot takes the cards!");
+						deck.getTableCards().clear();
+						break;
+
+					} else {
+						deck.getTableCards().add(deck.getRegularHand().get(i));
+						deck.getRegularHand().remove(deck.getRegularHand().get(i));
+						System.out.println("Cards that are on the table are: ");
+						System.out.println(String.valueOf(deck.getTableCards()));
+						break;
+					}
 				}
-			}
+
+			default:
+				for (int i = 0 ; i < deck.getRegularHand().size() ; i++) {
+					if (deck.getRegularHand().get(i).getValue() == deck.getTableCards().get(deck.getTableCards().size() - 1).getValue()
+							|| deck.getRegularHand().get(i).getValue() == "J") {
+						deck.getTableCards().add(deck.getRegularHand().get(i));
+						deck.getRegularHand().remove(deck.getRegularHand().get(i));
+						System.out.println("Bot takes the cards!");
+						deck.getTableCards().clear();
+						break;
+					} else {
+						deck.getTableCards().add(deck.getRegularHand().get(i));
+						deck.getRegularHand().remove(deck.getRegularHand().get(i));
+						System.out.println("Cards that are on the table are: ");
+						System.out.println(String.valueOf(deck.getTableCards()));
+						break;
+					}
+				}
 		}
-	
-			
-			 if (h==0) {
-				int played = rd.nextInt(deck.getRegularHand().size());
-				deck.getTableCards().add(deck.getRegularHand().get(played));
-				System.out.println("Bot 1 played: " + deck.getRegularHand().get(played));
-				deck.getRegularHand().remove(played);
-				h++;
-			 }
 	}
-	
-	
+
 	public void ExpertBot() {}
-	
+
 }
