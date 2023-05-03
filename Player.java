@@ -1,4 +1,7 @@
 import java.util.ArrayList;
+
+import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -6,8 +9,12 @@ public class Player {
 	Deck deck = new Deck();
 	Random random =new Random();
 	Scanner scanner = new Scanner(System.in);
-	protected ArrayList<Card> BotTakenCards = new ArrayList<Card>();
+	protected ArrayList<Card> NoviceTakenCards = new ArrayList<Card>();
+	protected ArrayList<Card> RegularTakenCards = new ArrayList<Card>();
+	protected ArrayList<Card> ExpertTakenCards = new ArrayList<Card>();
 	protected ArrayList<Card> PlayerTakenCards= new ArrayList<Card>();
+	private ArrayList<Integer> PlayedCards=new ArrayList<Integer>();
+
 
 	public void player() {
 
@@ -57,6 +64,7 @@ public class Player {
 					deck.getPlayerHand().remove(playerCard);
 					System.out.println("Cards that are on the table are : ");
 					System.out.println(String.valueOf(deck.getTableCards()));
+
 				}
 				break;
 
@@ -73,9 +81,13 @@ public class Player {
 					deck.getPlayerHand().remove(playerCard);
 					System.out.println("Cards that are on the table are : ");
 					System.out.println(String.valueOf(deck.getTableCards()));
+
 				}
 
 				System.out.println("Game continues!");
+				System.out.println(deck.getTableCards());
+
+				
 		}
 	}
 
@@ -94,6 +106,7 @@ public class Player {
 				deck.getNoviceHand().remove(botCard);
 				System.out.println("Cards that are on the table are : ");
 				System.out.println(String.valueOf(deck.getTableCards()));
+
 				break;
 
 			case 1:
@@ -132,6 +145,7 @@ public class Player {
 					deck.getNoviceHand().remove(botCard);
 					System.out.println("Cards that are on the table are: ");
 					System.out.println(String.valueOf(deck.getTableCards()));
+
 				}
 
 				System.out.println("Game continues!");
@@ -174,8 +188,9 @@ public class Player {
 						deck.getRegularHand().remove(deck.getRegularHand().get(i));
 						System.out.println("Cards that are on the table are: ");
 						System.out.println(String.valueOf(deck.getTableCards()));
+
 						break;
-					}
+					}	
 				}
 
 			default:
@@ -192,12 +207,112 @@ public class Player {
 						deck.getRegularHand().remove(deck.getRegularHand().get(i));
 						System.out.println("Cards that are on the table are: ");
 						System.out.println(String.valueOf(deck.getTableCards()));
+
 						break;
 					}
 				}
 		}
 	}
 
-	public void ExpertBot() {}
+	public void ExpertBot() {
+	    
+	   
+		
+		switch(deck.getTableCards().size()){
+		case 0:
+			int randomIndex = random.nextInt(deck.getExpertHand().size());
+			Card botCard = deck.getExpertHand().get(randomIndex);
+			System.out.println("Bot played: " + botCard);
+			deck.getTableCards().add(botCard);
+			deck.getExpertHand().remove(botCard);
+			System.out.println("Cards that are on the table are: ");
+			System.out.println(String.valueOf(deck.getTableCards()));
+			break;
+		
+		case 1:
+			for (int i = 0 ; i < deck.getExpertHand().size() ; i++) {
+				if (deck.getExpertHand().get(i).getValue() == deck.getTableCards().get(deck.getTableCards().size() - 1).getValue()) {
+					deck.getTableCards().add(deck.getExpertHand().get(i));
+					
+					deck.getExpertHand().remove(deck.getExpertHand().get(i));
+					System.out.println("Mişti!");
+					deck.getTableCards().clear();
+					break;
 
+				} else if (deck.getExpertHand().get(i).getValue() == "J") {
+					deck.getTableCards().add(deck.getExpertHand().get(i));
+					deck.getExpertHand().remove(deck.getExpertHand().get(i));
+					System.out.println("Bot takes the cards!");
+
+					deck.getTableCards().clear();
+					break;
+
+				} else {
+					
+					PlayedCards.add(deck.getTableCards().get(i).hashCode());
+				    Collections.sort(PlayedCards);
+					
+				    int maxNumber=0;//most repeated number
+			        int maxCounter = 0;
+			        
+			       
+			        int viewedNumber =1 ;//current number
+			        int viewedCounter = 0;
+			        
+			        
+			        	for(int j = 0; j < PlayedCards.size(); j++){
+				        	if(PlayedCards.get(j).intValue() == viewedNumber){
+				                viewedCounter++;
+				            }
+				            else{
+				                if(viewedCounter > maxCounter){
+				                    maxCounter = viewedCounter;
+				                    maxNumber = viewedNumber;
+				                }
+				            }
+				        	viewedNumber++;
+				        }
+			        
+			        
+			        System.out.println("most repeated number: " + maxNumber);
+			        
+					deck.getTableCards().add(deck.getExpertHand().get(maxNumber));
+					deck.getExpertHand().remove(deck.getExpertHand().get(i));
+					System.out.println("Cards that are on the table are: ");
+					System.out.println(String.valueOf(deck.getTableCards()));
+
+					break;
+				}
+			}
+
+		default:
+			
+	       
+			for (int i = 0 ; i < deck.getExpertHand().size() ; i++) {
+				if(deck.getTableCards().size()>0) {
+					if (deck.getExpertHand().get(i).getValue().equals(deck.getTableCards().get(deck.getTableCards().size() - 1).getValue()) || deck.getExpertHand().get(i).getValue().equals("J")) {
+					deck.getTableCards().add(deck.getExpertHand().get(i));
+					deck.getExpertHand().remove(deck.getExpertHand().get(i));
+					System.out.println("Bot takes the cards!");
+
+					
+					deck.getTableCards().clear();
+					break;
+				}
+				
+				} else {
+					deck.getExpertHand().remove(deck.getExpertHand().get(i));
+					System.out.println("Cards that are on the table are: ");
+					System.out.println(String.valueOf(deck.getTableCards()));
+
+					break;
+				}
+			}
+		}
+	}
+	
 }
+    
+
+
+
