@@ -14,6 +14,7 @@ public class Player {
 	protected ArrayList<Card> ExpertTakenCards = new ArrayList<Card>();
 	protected ArrayList<Card> PlayerTakenCards= new ArrayList<Card>();
 	private ArrayList<Integer> PlayedCards=new ArrayList<Integer>();
+	
 
 
 	public void player() {
@@ -148,7 +149,7 @@ public class Player {
 
 				}
 
-				System.out.println("Game continues!");
+				
 		}
 	}
 
@@ -211,29 +212,53 @@ public class Player {
 						break;
 					}
 				}
+				
 		}
 	}
 
 	public void ExpertBot() {
 	    
 	   
+		int[] Cards = new int[13];
+		
+		for (int i = 0; i < PlayedCards.size(); i++) {
+		    int Value = PlayedCards.get(i);
+		    Cards[Value - 1]++;
+		}
+		
+		int MostRepeatedValue= 0;
+		for (int i = 0; i < Cards.length; i++) {
+		    if (Cards[i] > MostRepeatedValue) {
+		    	MostRepeatedValue = Cards[i];
+		    	MostRepeatedValue = i + 1;
+		    }
+		}
+
+		/*System.out.println("Cards:");
+		for (int i = 0; i < Cards.length; i++) {
+		    System.out.println((i + 1) + ": " + Cards[i]);
+		}*/
+		System.out.println("Value of the most repeated number: " + MostRepeatedValue);
+		
+		
 		
 		switch(deck.getTableCards().size()){
 		case 0:
-			int randomIndex = random.nextInt(deck.getExpertHand().size());
-			Card botCard = deck.getExpertHand().get(randomIndex);
-			System.out.println("Bot played: " + botCard);
-			deck.getTableCards().add(botCard);
-			deck.getExpertHand().remove(botCard);
-			System.out.println("Cards that are on the table are: ");
-			System.out.println(String.valueOf(deck.getTableCards()));
-			break;
+			for (int i = 0 ; i < deck.getExpertHand().size() ; i++) {
+				if(deck.getExpertHand().get(i).getValue()==String.valueOf(MostRepeatedValue)) {
+					deck.getTableCards().add(deck.getExpertHand().get(i));
+					deck.getExpertHand().remove(deck.getExpertHand().get(i));
+					System.out.println("Cards that are on the table are: ");
+					System.out.println(String.valueOf(deck.getTableCards()));
+					break;
+
+				}
+			}
 		
 		case 1:
 			for (int i = 0 ; i < deck.getExpertHand().size() ; i++) {
 				if (deck.getExpertHand().get(i).getValue() == deck.getTableCards().get(deck.getTableCards().size() - 1).getValue()) {
 					deck.getTableCards().add(deck.getExpertHand().get(i));
-					
 					deck.getExpertHand().remove(deck.getExpertHand().get(i));
 					System.out.println("Mişti!");
 					deck.getTableCards().clear();
@@ -249,41 +274,19 @@ public class Player {
 
 				} else {
 					
-					PlayedCards.add(deck.getTableCards().get(i).hashCode());
-				    Collections.sort(PlayedCards);
 					
-				    int maxNumber=0;//most repeated number
-			        int maxCounter = 0;
-			        
-			       
-			        int viewedNumber =1 ;//current number
-			        int viewedCounter = 0;
-			        
-			        
-			        	for(int j = 0; j < PlayedCards.size(); j++){
-				        	if(PlayedCards.get(j).intValue() == viewedNumber){
-				                viewedCounter++;
-				            }
-				            else{
-				                if(viewedCounter > maxCounter){
-				                    maxCounter = viewedCounter;
-				                    maxNumber = viewedNumber;
-				                }
-				            }
-				        	viewedNumber++;
-				        }
-			        
-			        
-			        System.out.println("most repeated number: " + maxNumber);
-			        
-					deck.getTableCards().add(deck.getExpertHand().get(maxNumber));
-					deck.getExpertHand().remove(deck.getExpertHand().get(i));
-					System.out.println("Cards that are on the table are: ");
-					System.out.println(String.valueOf(deck.getTableCards()));
-
-					break;
+						if(deck.getExpertHand().get(i).getValue()==String.valueOf(MostRepeatedValue)) {
+							deck.getTableCards().add(deck.getExpertHand().get(i));
+							deck.getExpertHand().remove(deck.getExpertHand().get(i));
+							System.out.println("Cards that are on the table are: ");
+							System.out.println(String.valueOf(deck.getTableCards()));
+							break;
+						}
 				}
 			}
+					
+			        
+				
 
 		default:
 			
@@ -295,19 +298,22 @@ public class Player {
 					deck.getExpertHand().remove(deck.getExpertHand().get(i));
 					System.out.println("Bot takes the cards!");
 
-					
 					deck.getTableCards().clear();
 					break;
 				}
 				
 				} else {
+					if(deck.getExpertHand().get(i).getValue()==String.valueOf(MostRepeatedValue)) {
+					deck.getTableCards().add(deck.getExpertHand().get(i));
 					deck.getExpertHand().remove(deck.getExpertHand().get(i));
 					System.out.println("Cards that are on the table are: ");
 					System.out.println(String.valueOf(deck.getTableCards()));
+					}
 
 					break;
 				}
 			}
+			
 		}
 	}
 	
