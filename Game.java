@@ -1,5 +1,6 @@
 import java.io.*;
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public interface Game {
@@ -17,9 +18,25 @@ class twoPlayers implements Game {
         Scanner scanner = new Scanner(System.in);
         ArrayList<Integer> level = new ArrayList<>();
 
-        System.out.println("\n1 - Novice\n2 - Regular\n3 - Expert");
-        System.out.println("Enter the level of the bot: ");
-        level.add(scanner.nextInt());
+        while (true) {
+            try {
+                System.out.println("\n1 - Novice\n2 - Regular\n3 - Expert");
+                System.out.println("Enter the level of the bot: ");
+                int selectedLevel = scanner.nextInt();
+
+                if (selectedLevel < 1 || selectedLevel > 3) {
+                    throw new IllegalArgumentException(" Please enter a number between 1 and 3.");
+                }
+
+                level.add(selectedLevel);
+                break;
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid input. Please enter a number.");
+                scanner.next();
+            } catch (IllegalArgumentException e) {
+                System.out.println(e.getMessage());
+            }
+        }
 
         return level;
     }
@@ -72,7 +89,7 @@ class twoPlayers implements Game {
             String fileName = scanner.nextLine();
 
             BufferedReader reader = new BufferedReader(new FileReader(fileName));
-            // BufferedReader reader = new BufferedReader(new FileReader("scores.txt"));
+           // BufferedReader reader = new BufferedReader(new FileReader("scores.txt"));
 
             ArrayList<String> highScores = new ArrayList<>();
 
@@ -96,7 +113,7 @@ class twoPlayers implements Game {
             }
 
             BufferedWriter writer = new BufferedWriter(new FileWriter(fileName));
-            //BufferedWriter writer = new BufferedWriter(new FileWriter("scores.txt"));
+           // BufferedWriter writer = new BufferedWriter(new FileWriter("scores.txt"));
             for (String score : highScores) {
                 writer.write(score + "\n");
             }
@@ -130,11 +147,26 @@ class threePlayers implements Game {
         Scanner scanner = new Scanner(System.in);
         ArrayList<Integer> level = new ArrayList<>();
 
-        System.out.println("\n1 - Novice\n2 - Regular\n3 - Expert");
-
-        for (int i = 0; i < 2; i++) {
-            System.out.printf("Enter the level of the %s bot: ", i == 0 ? "first" : "second");
-            level.add(scanner.nextInt());
+        while (true) {
+            try {
+                System.out.println("\n1 - Novice\n2 - Regular\n3 - Expert");
+                
+                 for (int i = 0; i < 2; i++) {
+		            System.out.printf("Enter the level of the %s bot: ", i == 0 ? "first" : "second");
+		            int selectedLevel = scanner.nextInt();
+		            level.add(selectedLevel); 
+		            if (selectedLevel < 1 || selectedLevel > 3) {
+		            	throw new IllegalArgumentException(" Please enter a number between 1 and 3.");
+		            }
+		        }
+                
+                break;
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid input. Please enter a number.");
+                scanner.next();
+            } catch (IllegalArgumentException e) {
+                System.out.println(e.getMessage());
+            }
         }
         return level;
     }
@@ -259,11 +291,27 @@ class fourPlayers implements Game {
         Scanner scanner = new Scanner(System.in);
         ArrayList<Integer> level = new ArrayList<>();
 
-        System.out.println("\n1 - Novice\n2 - Regular\n3 - Expert");
-
-        for (int i = 0; i < 3 ; i++) {
-            System.out.printf("Enter the level of the %s bot: ", i == 0 ? "first" : (i == 1 ? "second" : "third"));
-            level.add(scanner.nextInt());
+ 
+        while (true) {
+            try {
+                System.out.println("\n1 - Novice\n2 - Regular\n3 - Expert");
+                
+                 for (int i = 0; i < 3; i++) {
+		            System.out.printf("Enter the level of the %s bot: \", i == 0 ? \"first\" : (i == 1 ? \"second\" : \"third");
+		            int selectedLevel = scanner.nextInt();
+		            level.add(selectedLevel); 
+		            if (selectedLevel < 1 || selectedLevel > 3) {
+		            	throw new IllegalArgumentException(" Please enter a number between 1 and 3.");
+		            }
+		        }
+                
+                break;
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid input. Please enter a number.");
+                scanner.next();
+            } catch (IllegalArgumentException e) {
+                System.out.println(e.getMessage());
+            }
         }
         return level;
     }
