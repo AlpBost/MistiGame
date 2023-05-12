@@ -1,25 +1,16 @@
 import java.io.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Scanner;
 
 public interface Game {
-    int howManyRounds();
     ArrayList<Integer> chooseLevel();
     void game();
     int calculateScore(Player player);
 }
-
 class twoPlayers implements Game {
     private final HumanPlayer humanPlayer = new HumanPlayer();
     Deck deck = new Deck();
     Board board = new Board();
-
-    @Override
-    public int howManyRounds() {
-        Scanner scanner = new Scanner(System.in);
-
-        System.out.println("\n" + "How many rounds you want to play?");
-        return scanner.nextInt();
-    }
 
     @Override
     public ArrayList<Integer> chooseLevel() {
@@ -35,39 +26,56 @@ class twoPlayers implements Game {
 
     @Override
     public void game() {
-        ArrayList<Integer> level = chooseLevel();
+        // Two player game algorithm.
+        //Novice
+        NoviceBot noviceBot = new NoviceBot();
+        // Regular
+        RegularBot regularBot = new RegularBot();
+        // Expert
+        ExpertBot expertBot = new ExpertBot();
 
-        List<Player> bots = Arrays.asList(new NoviceBot(), new RegularBot(), new ExpertBot());
-        Player bot = bots.get(level.get(0) - 1);
+        ArrayList<Integer> level = chooseLevel();
+        ArrayList<Player> playerList = new ArrayList<>();
+
+        if (level.get(0) == 1) playerList.add(noviceBot);
+        if (level.get(0) == 2) playerList.add(regularBot);
+        if (level.get(0) == 3) playerList.add(expertBot);
 
         String playerName = humanPlayer.getName();
-        String botName = bot.getName();
+        String botName = playerList.get(0).getName();
 
         Board.getBoard().addAll(deck.deal());
         Player.cardsPlayed.addAll(Board.getBoard());
 
         System.out.printf("%nCards that are on the board are:%n%s%n", Board.getBoard());
 
-        for (int i = 0 ; i < 6; i++) {
+        for (int i = 0 ; i < 6 ;i++) {
             humanPlayer.getHand().addAll(deck.deal());
-            bot.getHand().addAll(deck.deal());
+            playerList.get(0).getHand().addAll(deck.deal());
 
-            for (int j = 0 ; j < 4 ; j++ ) {
+            for (int j = 0 ; j < 4 ; j++) {
                 System.out.printf("\nYour cards are:%n%s%n", humanPlayer.getHand());
                 humanPlayer.playCard();
-                bot.playCard();
+                playerList.get(0).playCard();
             }
         }
 
         int playerScore = calculateScore(humanPlayer);
         System.out.printf("Your score is: %d%n", playerScore);
 
-        int botScore = calculateScore(bot);
+        int botScore = calculateScore(playerList.get(0));
         System.out.printf("%s's score is: %d\n", botName, botScore);
 
         try {
-            BufferedReader reader = new BufferedReader(new FileReader("scores.txt"));
+            Scanner scanner = new Scanner(System.in);
+            System.out.println("Enter the score list file path as following format: fileName.txt");
+            String fileName = scanner.nextLine();
+
+            BufferedReader reader = new BufferedReader(new FileReader(fileName));
+            // BufferedReader reader = new BufferedReader(new FileReader("scores.txt"));
+
             ArrayList<String> highScores = new ArrayList<>();
+
             String line;
             while ((line = reader.readLine()) != null) {
                 highScores.add(line);
@@ -87,7 +95,8 @@ class twoPlayers implements Game {
                 highScores.subList(10, highScores.size()).clear();
             }
 
-            BufferedWriter writer = new BufferedWriter(new FileWriter("scores.txt"));
+            BufferedWriter writer = new BufferedWriter(new FileWriter(fileName));
+            //BufferedWriter writer = new BufferedWriter(new FileWriter("scores.txt"));
             for (String score : highScores) {
                 writer.write(score + "\n");
             }
@@ -117,14 +126,6 @@ class threePlayers implements Game {
     Board board = new Board();
 
     @Override
-    public int howManyRounds() {
-        Scanner scanner = new Scanner(System.in);
-
-        System.out.println("\n" + "How many rounds you want to play?");
-        return scanner.nextInt();
-    }
-
-    @Override
     public ArrayList<Integer> chooseLevel() {
         Scanner scanner = new Scanner(System.in);
         ArrayList<Integer> level = new ArrayList<>();
@@ -140,15 +141,31 @@ class threePlayers implements Game {
 
     @Override
     public void game() {
-        ArrayList<Integer> level = chooseLevel();
+        // three player game algorithm.
+        //Novice
+        NoviceBot noviceBot1 = new NoviceBot();
+        NoviceBot noviceBot2 = new NoviceBot();
+        // Regular
+        RegularBot regularBot1 = new RegularBot();
+        RegularBot regularBot2 = new RegularBot();
+        // Expert
+        ExpertBot expertBot1 = new ExpertBot();
+        ExpertBot expertBot2 = new ExpertBot();
 
-        List<Player> bots = Arrays.asList(new NoviceBot(), new RegularBot(), new ExpertBot());
-        List<Player> selectedBots = Arrays.asList(bots.get(level.get(0) - 1), bots.get(level.get(1) - 1));
+        ArrayList<Integer> level = chooseLevel();
+        ArrayList<Player> playerList = new ArrayList<>();
+
+        if (level.get(0) == 1) playerList.add(noviceBot1);
+        if (level.get(1) == 1) playerList.add(noviceBot2);
+        if (level.get(0) == 2) playerList.add(regularBot1);
+        if (level.get(1) == 2) playerList.add(regularBot2);
+        if (level.get(0) == 3) playerList.add(expertBot1);
+        if (level.get(1) == 3) playerList.add(expertBot2);
 
         String playerName = humanPlayer.getName();
-        String[] botNames = new String[selectedBots.size()];
-        for (int i = 0 ; i < selectedBots.size() ; i++) {
-            botNames[i] = selectedBots.get(i).getName();
+        String[] botNames = new String[playerList.size()];
+        for (int i = 0 ; i < playerList.size() ; i++) {
+            botNames[i] = playerList.get(i).getName();
         }
 
         Board.getBoard().addAll(deck.deal());
@@ -156,31 +173,36 @@ class threePlayers implements Game {
 
         System.out.printf("%nCards that are on the board are:%n%s%n", Board.getBoard());
 
-        for (int i = 0 ; i < 4; i++) {
+        for (int i = 0 ; i < 4 ;i++) {
             humanPlayer.getHand().addAll(deck.deal());
-            for (Player bot : selectedBots) {
-                bot.getHand().addAll(deck.deal());
-            }
+            playerList.get(0).getHand().addAll(deck.deal());
+            playerList.get(1).getHand().addAll(deck.deal());
 
             for (int j = 0 ; j < 4 ; j++) {
                 System.out.printf("\nYour cards are:%n%s%n", humanPlayer.getHand());
+
                 humanPlayer.playCard();
-                for (Player bot : selectedBots) {
-                    bot.playCard();
-                }
+                playerList.get(0).playCard();
+                playerList.get(1).playCard();
             }
         }
 
         int playerScore = calculateScore(humanPlayer);
-        System.out.println("Your score is: " + playerScore);
+        System.out.printf("Your score is: %d%n", playerScore);
 
-        for (int i = 0 ; i < selectedBots.size() ; i++) {
-            int botScore = calculateScore(selectedBots.get(i));
+        for (int i = 0 ; i < playerList.size() ; i++) {
+            int botScore = calculateScore(playerList.get(i));
             System.out.printf("%s's score is: %d\n", botNames[i], botScore);
         }
 
         try {
-            BufferedReader reader = new BufferedReader(new FileReader("scores.txt"));
+            Scanner scanner = new Scanner(System.in);
+            System.out.println("Enter the score list file path as following format: fileName.txt");
+            String fileName = scanner.nextLine();
+
+            BufferedReader reader = new BufferedReader(new FileReader(fileName));
+            // BufferedReader reader = new BufferedReader(new FileReader("scores.txt"));
+
             ArrayList<String> highScores = new ArrayList<>();
             String line;
             while ((line = reader.readLine()) != null) {
@@ -189,8 +211,8 @@ class threePlayers implements Game {
             reader.close();
 
             highScores.add(playerName + ", " + playerScore);
-            for (int i = 0; i < selectedBots.size(); i++) {
-                int botScore = calculateScore(selectedBots.get(i));
+            for (int i = 0; i < playerList.size(); i++) {
+                int botScore = calculateScore(playerList.get(i));
                 highScores.add(botNames[i] + ", " + botScore);
             }
 
@@ -204,7 +226,7 @@ class threePlayers implements Game {
                 highScores.subList(10, highScores.size()).clear();
             }
 
-            BufferedWriter writer = new BufferedWriter(new FileWriter("scores.txt"));
+            BufferedWriter writer = new BufferedWriter(new FileWriter(fileName));
             for (String score : highScores) {
                 writer.write(score + "\n");
             }
@@ -233,13 +255,6 @@ class fourPlayers implements Game {
     Board board = new Board();
 
     @Override
-    public int howManyRounds() {
-        Scanner scanner = new Scanner(System.in);
-
-        System.out.println("\n" + "How many rounds you want to play?");
-        return scanner.nextInt();
-    }
-    @Override
     public ArrayList<Integer> chooseLevel() {
         Scanner scanner = new Scanner(System.in);
         ArrayList<Integer> level = new ArrayList<>();
@@ -255,15 +270,37 @@ class fourPlayers implements Game {
 
     @Override
     public void game() {
-        ArrayList<Integer> level = chooseLevel();
+        // four player game algorithm.
+        //Novice
+        NoviceBot noviceBot1 = new NoviceBot();
+        NoviceBot noviceBot2 = new NoviceBot();
+        NoviceBot noviceBot3 = new NoviceBot();
+        // Regular
+        RegularBot regularBot1 = new RegularBot();
+        RegularBot regularBot2 = new RegularBot();
+        RegularBot regularBot3 = new RegularBot();
+        // Expert
+        ExpertBot expertBot1 = new ExpertBot();
+        ExpertBot expertBot2 = new ExpertBot();
+        ExpertBot expertBot3 = new ExpertBot();
 
-        List<Player> bots = Arrays.asList(new NoviceBot(), new RegularBot(), new ExpertBot());
-        List<Player> selectedBots = Arrays.asList(bots.get(level.get(0) - 1), bots.get(level.get(1) - 1), bots.get(level.get(2) - 1));
+        ArrayList<Integer> level = chooseLevel();
+        ArrayList<Player> playerList = new ArrayList<>();
+
+        if (level.get(0) == 1) playerList.add(noviceBot1);
+        if (level.get(1) == 1) playerList.add(noviceBot2);
+        if (level.get(2) == 1) playerList.add(noviceBot3);
+        if (level.get(0) == 2) playerList.add(regularBot1);
+        if (level.get(1) == 2) playerList.add(regularBot2);
+        if (level.get(2) == 2) playerList.add(regularBot3);
+        if (level.get(0) == 3) playerList.add(expertBot1);
+        if (level.get(1) == 3) playerList.add(expertBot2);
+        if (level.get(2) == 3) playerList.add(expertBot3);
 
         String playerName = humanPlayer.getName();
-        String[] botNames = new String[selectedBots.size()];
-        for (int i = 0 ; i < selectedBots.size() ; i++) {
-            botNames[i] = selectedBots.get(i).getName();
+        String[] botNames = new String[playerList.size()];
+        for (int i = 0 ; i < playerList.size() ; i++) {
+            botNames[i] = playerList.get(i).getName();
         }
 
         Board.getBoard().addAll(deck.deal());
@@ -271,30 +308,38 @@ class fourPlayers implements Game {
 
         System.out.printf("%nCards that are on the board are:%n%s%n", Board.getBoard());
 
-        for (int i = 0 ; i < 3; i++) {
+        for (int i = 0 ; i < 3 ;i++) {
             humanPlayer.getHand().addAll(deck.deal());
-            for (Player bot : selectedBots) {
-                bot.getHand().addAll(deck.deal());
-            }
+            playerList.get(0).getHand().addAll(deck.deal());
+            playerList.get(1).getHand().addAll(deck.deal());
+            playerList.get(2).getHand().addAll(deck.deal());
 
             for (int j = 0 ; j < 4 ; j++) {
                 System.out.printf("\nYour cards are:%n%s%n", humanPlayer.getHand());
+
                 humanPlayer.playCard();
-                for (Player bot : selectedBots) {
-                    bot.playCard();
-                }
+                playerList.get(0).playCard();
+                playerList.get(1).playCard();
+                playerList.get(2).playCard();
             }
         }
 
         int playerScore = calculateScore(humanPlayer);
-        System.out.println("Your score is: " + playerScore);
-        for (int i = 0 ; i < selectedBots.size() ; i++) {
-            int botScore = calculateScore(selectedBots.get(i));
+        System.out.printf("Your score is: %d%n", playerScore);
+
+        for (int i = 0 ; i < playerList.size() ; i++) {
+            int botScore = calculateScore(playerList.get(i));
             System.out.printf("%s's score is: %d\n", botNames[i], botScore);
         }
 
         try {
-            BufferedReader reader = new BufferedReader(new FileReader("scores.txt"));
+            Scanner scanner = new Scanner(System.in);
+            System.out.println("Enter the score list file path as following format: fileName.txt");
+            String fileName = scanner.nextLine();
+
+            BufferedReader reader = new BufferedReader(new FileReader(fileName));
+            // BufferedReader reader = new BufferedReader(new FileReader("scores.txt"));
+
             ArrayList<String> highScores = new ArrayList<>();
             String line;
             while ((line = reader.readLine()) != null) {
@@ -303,8 +348,8 @@ class fourPlayers implements Game {
             reader.close();
 
             highScores.add(playerName + ", " + playerScore);
-            for (int i = 0; i < selectedBots.size(); i++) {
-                int botScore = calculateScore(selectedBots.get(i));
+            for (int i = 0; i < playerList.size(); i++) {
+                int botScore = calculateScore(playerList.get(i));
                 highScores.add(botNames[i] + ", " + botScore);
             }
 
@@ -318,7 +363,7 @@ class fourPlayers implements Game {
                 highScores.subList(10, highScores.size()).clear();
             }
 
-            BufferedWriter writer = new BufferedWriter(new FileWriter("scores.txt"));
+            BufferedWriter writer = new BufferedWriter(new FileWriter(fileName));
             for (String score : highScores) {
                 writer.write(score + "\n");
             }
@@ -327,6 +372,7 @@ class fourPlayers implements Game {
             ioException.printStackTrace();
         }
     }
+
     @Override
     public int calculateScore(Player player) {
         int score = 0;
