@@ -4,7 +4,7 @@ import java.util.Scanner;
 public class Start {
 	private static int round;
     public int getRound() {return round;}
-	public void setRound(int round) {this.round = round;}
+	
     public static void startGame() {
         Scanner scanner = new Scanner(System.in);
 
@@ -35,7 +35,7 @@ public class Start {
                 	    try {
                 	        System.out.println("\nHow many rounds do you want to play ?");
                 	        //round = scanner.nextInt();
-                	        int round= Integer.parseInt(scanner.nextLine());
+                	        round= Integer.parseInt(scanner.nextLine());
                 	        if (round <= 0) {
                 	            throw new IllegalArgumentException("Please enter a valid number.");
                 	        }
@@ -67,18 +67,24 @@ public class Start {
 
 		        	   switch (players) {
 		        	       case 1:
-		        	           twoPlayers newGame = new twoPlayers();
-		        	           newGame.game();
+		        	    	   for(int i=0;i<round;i++) {
+			        	           twoPlayers newGame = new twoPlayers();
+			        	           newGame.game();
+		        	    	   }
 		        	           break;
 
 		        	       case 2:
-		        	           threePlayers newGame1 = new threePlayers();
-		        	           newGame1.game();
+		        	    	   for(int i=0;i<round;i++) {
+			        	           threePlayers newGame1 = new threePlayers();
+			        	           newGame1.game();
+		        	    	   }
 		        	           break;
 
 		        	       case 3:
-		        	           fourPlayers newGame2 = new fourPlayers();
-		        	           newGame2.game();
+		        	    	   for(int i=0;i<round;i++) {
+		        	    		   fourPlayers newGame2 = new fourPlayers();
+		        	           	   newGame2.game();
+		        	    	   }
 		        	           break;
 		        	   }
 		           

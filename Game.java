@@ -297,7 +297,7 @@ class fourPlayers implements Game {
                 System.out.println("\n1 - Novice\n2 - Regular\n3 - Expert");
                 
                  for (int i = 0; i < 3; i++) {
-		            System.out.printf("Enter the level of the %s bot: \", i == 0 ? \"first\" : (i == 1 ? \"second\" : \"third");
+		            System.out.printf("Enter the level of the %s bot: ", i == 0 ? "first" : (i == 1 ? "second" : "third"));
 		            int selectedLevel = scanner.nextInt();
 		            level.add(selectedLevel); 
 		            if (selectedLevel < 1 || selectedLevel > 3) {
